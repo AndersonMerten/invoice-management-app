@@ -1,45 +1,90 @@
-import React, { useState } from 'react';
-import Modal from 'react-modal';
+import {
+  Box,
+  Button,
+  Modal,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
 
-const InvoiceModal = ({ isOpen, onRequestClose, onSave }) => {
-    const [clientName, setClientName] = useState('');
-    const [invoiceValue, setInvoiceValue] = useState('');
+interface InvoiceModalProps {
+  isOpen?: boolean;
+  onClose: () => void;
+  onSave: (clientName: string, value: number) => void;
+}
 
-    const handleSave = () => {
-        const value = parseFloat(invoiceValue);
-        if (!isNaN(value) && clientName) {
-            onSave(clientName, value);
-            setClientName('');
-            setInvoiceValue('');
-            onRequestClose();
-        }
-    };
+const InvoiceModal = ({
+  isOpen = false,
+  onClose,
+  onSave,
+}: InvoiceModalProps) => {
+  const [clientName, setClientName] = useState("");
+  const [invoiceValue, setInvoiceValue] = useState("");
 
-    return (
-        <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
-            <h2>Lançar Nota Fiscal</h2>
-            <div>
-                <label>Nome do Cliente:</label>
-                <input
-                    type="text"
-                    value={clientName}
-                    onChange={(e) => setClientName(e.target.value)}
-                />
-            </div>
-            <div>
-                <label>Valor da Nota:</label>
-                <input
-                    type="number"
-                    value={invoiceValue}
-                    onChange={(e) => setInvoiceValue(e.target.value)}
-                />
-            </div>
-            <div>
-                <button onClick={onRequestClose}>Cancelar</button>
-                <button onClick={handleSave}>Salvar</button>
-            </div>
-        </Modal>
-    );
+  const handleSave = () => {
+    const value = parseFloat(invoiceValue);
+    if (!isNaN(value) && clientName) {
+      onSave(clientName, value);
+      setClientName("");
+      setInvoiceValue("");
+      onClose();
+    }
+  };
+
+  return (
+    <Modal
+      open={isOpen}
+      onClose={onClose}
+      aria-labelledby="invoice-modal-title"
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 400,
+          bgcolor: "background.paper",
+          boxShadow: 24,
+          p: 4,
+          borderRadius: 2,
+        }}
+      >
+        <Typography
+          id="invoice-modal-title"
+          variant="h6"
+          component="h2"
+          gutterBottom
+        >
+          Lançar Nota Fiscal
+        </Typography>
+        <Stack spacing={3}>
+          <TextField
+            fullWidth
+            label="Nome do Cliente"
+            value={clientName}
+            onChange={(e) => setClientName(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            label="Valor da Nota"
+            type="number"
+            value={invoiceValue}
+            onChange={(e) => setInvoiceValue(e.target.value)}
+          />
+          <Stack direction="row" spacing={2} justifyContent="flex-end">
+            <Button variant="outlined" onClick={onClose}>
+              Cancelar
+            </Button>
+            <Button variant="contained" onClick={handleSave}>
+              Salvar
+            </Button>
+          </Stack>
+        </Stack>
+      </Box>
+    </Modal>
+  );
 };
 
 export default InvoiceModal;

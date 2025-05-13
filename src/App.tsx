@@ -1,54 +1,80 @@
-import React, { useState } from 'react';
-import Header from './components/Header';
-import InvoiceModal from './components/InvoiceModal';
-import CloseDayModal from './components/CloseDayModal';
-import InvoiceList from './components/InvoiceList';
-import CloseDayList from './components/CloseDayList';
-import './styles/App.css';
+import { Button, Container, Stack } from "@mui/material";
+import { useState } from "react";
+import CloseDayList from "./components/CloseDayList";
+import CloseDayModal from "./components/CloseDayModal";
+import Header from "./components/Header";
+import InvoiceList from "./components/InvoiceList";
+import InvoiceModal from "./components/InvoiceModal";
+import "./styles/App.css";
+
+interface Invoice {
+  id: number;
+  clientName: string;
+  value: number;
+}
+
+interface CloseDay {
+  date: string;
+  pix: number;
+  card: number;
+  others: number;
+}
 
 const App = () => {
-    const [saldo, setSaldo] = useState(0);
-    const [invoices, setInvoices] = useState([]);
-    const [closeDays, setCloseDays] = useState([]);
-    const [isInvoiceModalOpen, setInvoiceModalOpen] = useState(false);
-    const [isCloseDayModalOpen, setCloseDayModalOpen] = useState(false);
+  const [saldo, setSaldo] = useState(0);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [closeDays, setCloseDays] = useState<CloseDay[]>([]);
+  const [isInvoiceModalOpen, setInvoiceModalOpen] = useState(false);
+  const [isCloseDayModalOpen, setCloseDayModalOpen] = useState(false);
 
-    const handleAddInvoice = (clientName, invoiceValue) => {
-        setInvoices([...invoices, { clientName, invoiceValue }]);
-        setSaldo(saldo + invoiceValue);
-        setInvoiceModalOpen(false);
+  const handleAddInvoice = (clientName: string, value: number) => {
+    const newInvoice: Invoice = {
+      id: Date.now(),
+      clientName,
+      value,
     };
+    setInvoices((prevInvoices) => [...prevInvoices, newInvoice]);
+    setSaldo((prevSaldo) => prevSaldo + value);
+    setInvoiceModalOpen(false);
+  };
 
-    const handleCloseDay = (pix, card, others) => {
-        const totalClose = pix + card + others;
-        setCloseDays([...closeDays, { date: new Date().toLocaleDateString(), totalClose }]);
-        setSaldo(saldo - totalClose);
-        setCloseDayModalOpen(false);
+  const handleCloseDay = (pix: number, card: number, others: number) => {
+    const newCloseDay: CloseDay = {
+      date: new Date().toLocaleDateString(),
+      pix,
+      card,
+      others,
     };
+    setCloseDays((prevCloseDays) => [...prevCloseDays, newCloseDay]);
+    setSaldo((prevSaldo) => prevSaldo - (pix + card + others));
+    setCloseDayModalOpen(false);
+  };
 
-    return (
-        <div className="App">
-            <Header saldo={saldo} />
-            <div className="button-container">
-                <button onClick={() => setInvoiceModalOpen(true)}>Lançar Nota Fiscal</button>
-                <button onClick={() => setCloseDayModalOpen(true)}>Fechar o Dia</button>
-            </div>
-            <InvoiceList invoices={invoices} />
-            <CloseDayList closeDays={closeDays} />
-            {isInvoiceModalOpen && (
-                <InvoiceModal 
-                    onClose={() => setInvoiceModalOpen(false)} 
-                    onSave={handleAddInvoice} 
-                />
-            )}
-            {isCloseDayModalOpen && (
-                <CloseDayModal 
-                    onClose={() => setCloseDayModalOpen(false)} 
-                    onSave={handleCloseDay} 
-                />
-            )}
-        </div>
-    );
+  return (
+    <Container maxWidth="md" sx={{ py: 4 }}>
+      <Header saldo={saldo} />
+      <Stack direction="row" spacing={2} sx={{ mb: 4 }}>
+        <Button variant="contained" onClick={() => setInvoiceModalOpen(true)}>
+          Lançar Nota Fiscal
+        </Button>
+        <Button variant="contained" onClick={() => setCloseDayModalOpen(true)}>
+          Fechar o Dia
+        </Button>
+      </Stack>
+      <InvoiceList invoices={invoices} />
+      <CloseDayList closeDays={closeDays} />
+      <InvoiceModal
+        isOpen={isInvoiceModalOpen}
+        onClose={() => setInvoiceModalOpen(false)}
+        onSave={handleAddInvoice}
+      />
+      <CloseDayModal
+        isOpen={isCloseDayModalOpen}
+        onRequestClose={() => setCloseDayModalOpen(false)}
+        onSave={handleCloseDay}
+      />
+    </Container>
+  );
 };
 
 export default App;
