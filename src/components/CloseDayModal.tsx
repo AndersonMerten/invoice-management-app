@@ -64,6 +64,7 @@ const CloseDayModal: React.FC<CloseDayModalProps> = ({
             type="number"
             value={pix}
             onChange={(e) => setPix(Number(e.target.value))}
+            variant="outlined"
           />
           <TextField
             fullWidth
@@ -71,6 +72,7 @@ const CloseDayModal: React.FC<CloseDayModalProps> = ({
             type="number"
             value={card}
             onChange={(e) => setCard(Number(e.target.value))}
+            variant="outlined"
           />
           <TextField
             fullWidth
@@ -78,12 +80,13 @@ const CloseDayModal: React.FC<CloseDayModalProps> = ({
             type="number"
             value={other}
             onChange={(e) => setOther(Number(e.target.value))}
+            variant="outlined"
           />
           <Stack direction="row" spacing={2} justifyContent="flex-end">
             <Button variant="outlined" onClick={onRequestClose}>
               Cancelar
             </Button>
-            <Button variant="contained" onClick={handleSave}>
+            <Button variant="contained" color="secondary" onClick={handleSave}>
               Salvar fechamento
             </Button>
           </Stack>

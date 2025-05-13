@@ -65,6 +65,7 @@ const InvoiceModal = ({
             label="Nome do Cliente"
             value={clientName}
             onChange={(e) => setClientName(e.target.value)}
+            variant="outlined"
           />
           <TextField
             fullWidth
@@ -72,12 +73,13 @@ const InvoiceModal = ({
             type="number"
             value={invoiceValue}
             onChange={(e) => setInvoiceValue(e.target.value)}
+            variant="outlined"
           />
           <Stack direction="row" spacing={2} justifyContent="flex-end">
             <Button variant="outlined" onClick={onClose}>
               Cancelar
             </Button>
-            <Button variant="contained" onClick={handleSave}>
+            <Button variant="contained" color="primary" onClick={handleSave}>
               Salvar
             </Button>
           </Stack>

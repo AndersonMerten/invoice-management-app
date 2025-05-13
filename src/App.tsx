@@ -1,4 +1,11 @@
-import { Button, Container, Stack } from "@mui/material";
+import {
+  Button,
+  Container,
+  CssBaseline,
+  Paper,
+  Stack,
+  ThemeProvider,
+} from "@mui/material";
 import { useState } from "react";
 import CloseDayList from "./components/CloseDayList";
 import CloseDayModal from "./components/CloseDayModal";
@@ -6,6 +13,7 @@ import Header from "./components/Header";
 import InvoiceList from "./components/InvoiceList";
 import InvoiceModal from "./components/InvoiceModal";
 import "./styles/App.css";
+import { theme } from "./theme";
 
 interface Invoice {
   id: number;
@@ -51,29 +59,46 @@ const App = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Header saldo={saldo} />
-      <Stack direction="row" spacing={2} sx={{ mb: 4 }}>
-        <Button variant="contained" onClick={() => setInvoiceModalOpen(true)}>
-          Lançar Nota Fiscal
-        </Button>
-        <Button variant="contained" onClick={() => setCloseDayModalOpen(true)}>
-          Fechar o Dia
-        </Button>
-      </Stack>
-      <InvoiceList invoices={invoices} />
-      <CloseDayList closeDays={closeDays} />
-      <InvoiceModal
-        isOpen={isInvoiceModalOpen}
-        onClose={() => setInvoiceModalOpen(false)}
-        onSave={handleAddInvoice}
-      />
-      <CloseDayModal
-        isOpen={isCloseDayModalOpen}
-        onRequestClose={() => setCloseDayModalOpen(false)}
-        onSave={handleCloseDay}
-      />
-    </Container>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
+          <Header saldo={saldo} />
+          <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setInvoiceModalOpen(true)}
+            >
+              Lançar Nota Fiscal
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => setCloseDayModalOpen(true)}
+            >
+              Fechar o Dia
+            </Button>
+          </Stack>
+        </Paper>
+
+        <Stack spacing={3}>
+          <InvoiceList invoices={invoices} />
+          <CloseDayList closeDays={closeDays} />
+        </Stack>
+
+        <InvoiceModal
+          isOpen={isInvoiceModalOpen}
+          onClose={() => setInvoiceModalOpen(false)}
+          onSave={handleAddInvoice}
+        />
+        <CloseDayModal
+          isOpen={isCloseDayModalOpen}
+          onRequestClose={() => setCloseDayModalOpen(false)}
+          onSave={handleCloseDay}
+        />
+      </Container>
+    </ThemeProvider>
   );
 };
 
