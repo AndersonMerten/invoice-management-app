@@ -77,7 +77,7 @@ const App = () => {
               color="secondary"
               onClick={() => setCloseDayModalOpen(true)}
             >
-              Fechar o Dia
+              Fechar o Dias
             </Button>
           </Stack>
         </Paper>
